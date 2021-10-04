@@ -20,8 +20,8 @@
 #include <sys/socket.h>
 #include <sys/socket.h>
 #include <sys/queue.h>
-#include <readline/readline.h>
-#include <readline/history.h>
+/* -amh- #include <readline/readline.h> */
+/* -amh- #include <readline/history.h> */
 #include <asm/types.h>
 #include <netlink/netlink.h>
 #include <netlink/genl/genl.h>
@@ -859,12 +859,24 @@ void display_help()
 void enter_command_line_mode()
 {
 	char *input;
+    size_t len;
+    ssize_t linesize;
 	int err;
 
-	do {
-		input = readline("dropwatch> ");
+    /* NB getline will resize this buffer as necessary using realloc.
+          We rely upon reusing it every time round the loop */
+    input = malloc(BUFSIZE);
 
-		if (input == NULL) {
+	do {
+        len = 0;
+        
+		/* -amh- input = readline("dropwatch> "); */
+        printf("dropwatch> ");
+        fflush(stdout);
+        linesize = getline(&input, &len, stdin);
+
+		/* -amh- if (input == NULL) { */
+        if (linesize < 0) {
 			/* Someone closed stdin on us */
 			printf("Terminating dropwatch...\n");
 			state = STATE_EXIT;

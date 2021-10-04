@@ -1,11 +1,15 @@
-# Makefile.am --
-# Copyright 2018 Neil Horman
-# All Rights Reserved.
 # SPDX-License-Identifier: GPL-2.0-or-later
+#
+bin_PROGRAMS = dropwatch dwdump
 
-AUTOMAKE_OPTIONS = no-dependencies
-ACLOCAL_AMFLAGS = -I m4
-EXTRA_DIST = COPYING autogen.sh
+AM_CFLAGS = -g -Wall -Werror $(LIBNL3_CFLAGS) $(LIBNLG3_CFLAGS) #-amh- $(READLINE_CFLAGS)
+AM_LDFLAGS = $(LIBNL3_LIBS) $(LIBNLG3_LIBS) -lpcap # -amh- $(READLINE_LIBS) -lpcap
+AM_CPPFLAGS = -D_GNU_SOURCE
 
-SUBDIRS = src doc tests
+dropwatch_SOURCES = main.c lookup.c lookup_kas.c
+dwdump_SOURCES = dwdump.c
 
+if USE_BFD
+dropwatch_SOURCES += lookup_bfd.c
+AM_LDFLAGS += -lbfd
+endif
