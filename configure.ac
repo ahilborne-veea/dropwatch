@@ -21,7 +21,7 @@ PKG_CHECK_MODULES([LIBPCAP], [libpcap], [], [
 AC_ARG_WITH([bfd],
 	[AS_HELP_STRING([--without-bfd], [Build without bfd library (default: yes)])],
 	[with_bfd=$withval],
-	[with_bfd=yes])
+	[with_bfd=no])
 AS_IF([test "x$with_bfd" != "xno"], [
 	AC_CHECK_HEADERS([bfd.h], [], [AC_MSG_ERROR([Couldn't find or include bfd.h])])
 ])
